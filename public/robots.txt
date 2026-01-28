@@ -5,7 +5,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location (update with your actual domain)
-Sitemap: https://YOUR_VERCEL_DOMAIN/sitemap.xml
+Sitemap: https://agent-sudo.vercel.app/sitemap.xml
 
 # LLM-friendly content
 # See https://llmstxt.org for more information
