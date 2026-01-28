@@ -7,9 +7,8 @@ import JsonLd, { faqItemsForSchema } from '@/components/JsonLd';
 export default function App({ Component, pageProps }: AppProps) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ||
-    (process.env.NEXT_PUBLIC_VERCEL_URL
-      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-      : '');
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    'https://agent-sudo.vercel.app';
   const siteName = 'Agent-Sudo';
   const siteTitle =
     'Agent-Sudo - Adaptive High-Friction Guardrails for AI Agents';
