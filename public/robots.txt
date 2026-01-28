@@ -1,0 +1,14 @@
+# Agent-Sudo Robots.txt
+# Replace YOUR_VERCEL_DOMAIN with your actual domain
+
+User-agent: *
+Allow: /
+
+# Sitemap location (update with your actual domain)
+Sitemap: https://YOUR_VERCEL_DOMAIN/sitemap.xml
+
+# LLM-friendly content
+# See https://llmstxt.org for more information
+# llms.txt: /llms.txt
+# llms-full.txt: /llms-full.txt
+

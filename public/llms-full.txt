@@ -1,0 +1,143 @@
+# Agent-Sudo: Complete Technical Documentation
+
+> Adaptive High-Friction Guardrails for Autonomous Agents
+
+## Overview
+
+Agent-Sudo is a safety interceptor protocol designed for autonomous AI agents. It addresses the critical flaw in traditional Human-in-the-Loop (HITL) systems: alert fatigue. When agents prompt users for every action, users develop muscle memory and approve without reading. The human is in the loop, but the brain is not.
+
+## Core Concept: Proof of Intent
+
+Traditional HITL asks: "Do you agree?" — Users click Yes without reading.
+SUDO.md asks: "Prove you mean it." — Users must actively demonstrate intent.
+
+Unlike sandboxes that prevent malicious code escape, Agent-Sudo protects against "authorized stupidity" - when AI agents with proper permissions misunderstand intent and execute harmful commands.
+
+## The Friction Protocol
+
+Agent-Sudo implements three progressive friction levels:
+
+### L0 - Read Only (No Friction)
+- Read-only operations
+- No confirmation required
+
+### L1 - Reversible Writes (Standard Confirmation)
+- Operations that can be undone
+- Standard "Click OK" confirmation
+
+### L2 - Temporal Friction
+- 5-second mandatory cooldown
+- Forces users out of "fast thinking" mode
+- Use case: System restarts, service deployments
+
+### L3 - Cognitive Friction (Semantic Echo)
+- Users must type a key phrase to confirm
+- Forces reading and understanding
+- Use case: Database deletions, force pushes
+
+### L4 - Strong Authentication
+- Out-of-band verification
+- Supports: Passkey, TOTP, YubiKey, Push, SMS/Email, Biometric
+- Use case: Large financial transfers, production deployments
+
+## SUDO.md Specification
+
+The `SUDO.md` file resides in the root of a repository to define safety boundaries. It uses YAML format.
+
+### Schema
+
+```yaml
+version: "1.0"
+security_rules:
+  - pattern: "<regex_pattern>"      # Regex to match commands
+    command: "<exact_command>"      # Or exact command match
+    tool: "<tool_name>"             # Or tool name match
+    condition: "<expression>"       # Optional condition
+    risk_level: "L2|L3|L4"         # Friction level
+    challenge: "semantic_echo"      # For L3
+    delay_seconds: 5                # For L2
+    auth: "biometric|totp|passkey"  # For L4
+    message: "<warning_message>"    # Custom warning
+```
+
+### Example Configuration
+
+```yaml
+version: "1.0"
+security_rules:
+  # L3: Database deletion requires typing to confirm
+  - pattern: "DROP TABLE .*"
+    risk_level: "L3"
+    challenge: "semantic_echo"
+    message: "⚠️ DATABASE DELETION DETECTED"
+
+  # L2: System restart requires 5s delay
+  - command: "systemctl restart .*"
+    risk_level: "L2"
+    delay_seconds: 5
+
+  # L4: Large fund transfers require biometric
+  - tool: "transfer_funds"
+    condition: "amount > 50"
+    risk_level: "L4"
+    auth: "biometric"
+
+  # L3: Force push requires confirmation
+  - command: "git push --force"
+    risk_level: "L3"
+    semantic_key: "force-push"
+```
+
+## Architecture
+
+Agent-Sudo acts as a middleware/interceptor between the LLM reasoning loop and the tool execution environment:
+
+1. LLM Agent receives user prompt
+2. Agent makes tool call
+3. Agent-Sudo intercepts the call
+4. Risk assessment via regex/static check and semantic audit
+5. Based on risk level:
+   - L0-L1: Pass through to execution
+   - L2-L4: Trigger appropriate friction challenge
+6. User completes verification challenge
+7. On success: Execute tool
+8. On failure/timeout: Return to agent
+
+## Integration Guide
+
+### For Agent Developers
+
+If you're building an AI agent, implement SUDO.md protocol:
+
+1. Parse `SUDO.md` files in user projects
+2. Implement friction UI for L1-L4 levels
+3. Intercept tool calls and match against rules
+
+**Compatible Agents:**
+- Codex, Cursor, Windsurf → Read project's SUDO.md before risky git/shell operations
+- Manus, Claude Computer Use → Check SUDO.md before file deletion, email actions
+- n8n, Zapier AI → Enforce SUDO.md for financial workflows
+
+### For Project/System Owners
+
+1. Add `SUDO.md` to your repository root
+2. Define rules for risky operations
+3. Agents that support SUDO.md will enforce your rules
+
+## Comparison with Traditional HITL
+
+| Traditional HITL | Agent-Sudo |
+|:-----------------|:-----------:|
+| Passive approval: "Click OK to continue" | Active challenge-response |
+| Susceptible to habituation | Breaks autopilot mode |
+| Same friction for all actions | Friction scales with risk |
+| Authorization only | **Proof of Intent** |
+
+## License
+
+MIT License — Open Source and Free Forever.
+
+## Links
+
+- GitHub: https://github.com/Agent-Sudo-Org/agent-sudo
+

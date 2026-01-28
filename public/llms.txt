@@ -1,0 +1,41 @@
+# Agent-Sudo
+
+> Adaptive High-Friction Guardrails for Autonomous Agents
+
+Agent-Sudo is a safety protocol and middleware for AI agents that prevents accidental production disasters through cognitive forcing functions.
+
+## The Problem
+
+Traditional Human-in-the-Loop (HITL) systems suffer from "Alert Fatigue" - users develop muscle memory and approve dangerous actions without reading them. Sandboxes prevent malicious code escape, but AI agents are authorized users that can still execute harmful commands like `DROP TABLE users`.
+
+## The Solution
+
+Agent-Sudo introduces **Proof of Intent** through three friction levels:
+
+- **L2 (Temporal Friction)**: 5-second mandatory cooldown before risky actions
+- **L3 (Cognitive Friction)**: Semantic Echo - users must type to confirm they understand
+- **L4 (Strong Authentication)**: Passkey, TOTP, YubiKey, or biometric verification
+
+## SUDO.md Specification
+
+Add a `SUDO.md` file to your repository to define safety rules:
+
+```yaml
+version: "1.0"
+security_rules:
+  - pattern: "DROP TABLE .*"
+    risk_level: "L3"
+    challenge: "semantic_echo"
+  - command: "git push --force"
+    risk_level: "L3"
+  - tool: "transfer_funds"
+    condition: "amount > 50"
+    risk_level: "L4"
+    auth: "biometric"
+```
+
+## Links
+
+- GitHub: https://github.com/Agent-Sudo-Org/agent-sudo
+- Full Documentation: /llms-full.txt
+
